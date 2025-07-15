@@ -1,50 +1,68 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, ScrollView, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Pressable } from 'react-native';
+import GoalItem from './components/GoalItem';
+import GoalInput from './components/GoalInput';
 
 export default function App() {
-  const [enteredGoal, setEnteredGoal] = useState('');
+  const [modalIsVisible, setModalIsVisible] = useState(false);
   const [goals, setGoals] = useState([]);
 
-  function goalInputHandler(enteredText) {
-    console.log(enteredText);
-    setEnteredGoal(enteredText);
+  function startAddGoalModalHandler() {
+    setModalIsVisible(true);
   }
 
-  function addGoalHandler() {
+  function endAddGoalModalHandler() {
+    setModalIsVisible(false);
+  }
+
+  function addGoalHandler(enteredGoal) {
     if (enteredGoal.trim().length === 0) {
       return;
     }
-    setGoals(currentGoals => [
+    setGoals((currentGoals) => [
       ...currentGoals,
-      {text: enteredGoal, key: Math.random().toString()}
+      { text: enteredGoal, id: Math.random().toString() }
     ]);
-    setEnteredGoal('');
+
+    endAddGoalModalHandler();
   }
 
-  function deleteGoalHandler(goalIndex) {
-    setGoals(currentGoals => currentGoals.filter((_, index) => index !== goalIndex));
+  function deleteGoalHandler(id) {
+    setGoals((currentGoals) => {
+      return currentGoals.filter((goal) => goal.id !== id);
+    });
   }
 
   return (
     <View style={styles.appContainer}>
-      <View style={styles.inputContainer}>
-        <TextInput style={styles.textInput} placeholder='Your course goal' onChangeText={goalInputHandler} />
-        <Button title='Add Goal' onPress={addGoalHandler}/>
-      </View>
+      <Pressable style={styles.button} onPress={startAddGoalModalHandler}>
+        <Text style={styles.buttonText}>Modal</Text>
+      </Pressable>
+      <GoalInput
+        onAddGoal={addGoalHandler}
+        visible={modalIsVisible}
+        onCancel={endAddGoalModalHandler}
+      />
       <View style={styles.goalsContainer}>
-        <Text>List of Goals</Text>
-        <FlatList data={goals} renderItem={itemData => {
-          return (
-            <View style={styles.goalItem}>
-              <Text>{itemData.item.text}</Text>
-              <Button title='X' onPress={() => deleteGoalHandler(itemData.index)} color='red'/>
-            </View>
-          );
-        }}
-        keyExtractor={(item, index) => {return item.key}}
-        alwaysBounceVertical={false} />
-
-        {goals.length === 0 && <Text>No goals added yet!</Text>}
+        <Text style={styles.title}>
+          {goals.length === 0 ? 'No goals added yet!' : 'GOALS'}
+        </Text>
+        <FlatList
+          data={goals}
+          renderItem={(itemData) => {
+            return (
+              <GoalItem
+                text={itemData.item.text}
+                id={itemData.item.id}
+                onDeleteItem={deleteGoalHandler}
+              />
+            );
+          }}
+          idExtractor={(item, index) => {
+            return item.id;
+          }}
+          alwaysBounceVertical={false}
+        />
       </View>
     </View>
   );
@@ -52,42 +70,29 @@ export default function App() {
 
 const styles = StyleSheet.create({
   appContainer: {
-    padding: 50,
+    paddingVertical: 50,
     backgroundColor: '#fff',
     flex: 1,
-    paddingHorizontal: 16,
-  },
-  inputContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 24,
-    borderBottomWidth: 1,
-    borderBottomColor: '#cccccc',
-  },
-  textInput: {
-    borderWidth: 1,
-    borderColor: '#cccccc',
-    width: '80%',
-    backgroundColor: '#f9f9f9',
-    padding: 10,
-    borderRadius: 5,
-    marginRight: 8,
-    padding: 8,
+    paddingHorizontal: 15
   },
   goalsContainer: {
-    flex: 6,
+    flex: 6
   },
-  goalItem: {
-    padding: 5,
-    backgroundColor: '#f0f0f0',
-    marginVertical: 5,
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 12,
+    textAlign: 'center'
+  },
+  button: {
+    backgroundColor: '#410f70ff',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
     borderRadius: 5,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderColor: '#cccccc',
-    borderWidth: 1,
+    alignItems: 'center'
   },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold'
+  }
 });
