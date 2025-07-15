@@ -1,17 +1,12 @@
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StyleSheet, View, Text, Pressable } from 'react-native';
 
 function GoalItem(props) {
-  function deleteGoalHandler(goalIndex) {
-    setGoals((currentGoals) =>
-      currentGoals.filter((_, index) => index !== goalIndex)
-    );
-  }
-
   return (
-    <View style={styles.goalItem}>
-      <Text>{props.text}</Text>
-      {/* <Button title='X' onPress={() => deleteGoalHandler(props.index)} color='red'/> */}
-    </View>
+    <Pressable onPress={props.onDeleteItem.bind(this, props.id)}>
+      <View style={styles.goalItem}>
+        <Text>{props.text}</Text>
+      </View>
+    </Pressable>
   );
 }
 
