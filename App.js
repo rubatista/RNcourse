@@ -26,8 +26,9 @@ export default function App() {
     <View style={styles.appContainer}>
       <GoalInput onAddGoal={addGoalHandler} />
       <View style={styles.goalsContainer}>
-        <Text>List of Goals</Text>
-        {goals.length === 0 && <Text>No goals added yet!</Text>}
+        <Text style={styles.title}>
+          {goals.length === 0 ? 'No goals added yet!' : 'GOALS'}
+        </Text>
         <FlatList
           data={goals}
           renderItem={(itemData) => {
@@ -51,12 +52,18 @@ export default function App() {
 
 const styles = StyleSheet.create({
   appContainer: {
-    padding: 50,
+    paddingVertical: 50,
     backgroundColor: '#fff',
     flex: 1,
-    paddingHorizontal: 16
+    paddingHorizontal: 15
   },
   goalsContainer: {
     flex: 6
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 12,
+    textAlign: 'center'
   }
 });

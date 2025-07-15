@@ -1,4 +1,4 @@
-import { StyleSheet, View, TextInput, Button } from 'react-native';
+import { StyleSheet, View, TextInput, Text, Pressable } from 'react-native';
 import { useState } from 'react';
 
 function GoalInput(props) {
@@ -18,10 +18,13 @@ function GoalInput(props) {
       <TextInput
         style={styles.textInput}
         placeholder='Your course goal'
+        placeholderTextColor='#410f70ff'
         onChangeText={goalInputHandler}
         value={enteredGoal}
       />
-      <Button title='Add Goal' onPress={addGoalHandler} />
+      <Pressable style={styles.button} onPress={addGoalHandler}>
+        <Text style={styles.buttonText}>Add Goal</Text>
+      </Pressable>
     </View>
   );
 }
@@ -36,16 +39,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 24,
     borderBottomWidth: 1,
-    borderBottomColor: '#cccccc'
+    borderBottomColor: '#410f70ff'
   },
   textInput: {
     borderWidth: 1,
-    borderColor: '#cccccc',
-    width: '80%',
+    borderColor: '#410f70ff',
+    width: '75%',
     backgroundColor: '#f9f9f9',
-    padding: 10,
+    padding: 8,
+    borderRadius: 5
+  },
+  button: {
+    backgroundColor: '#410f70ff',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
     borderRadius: 5,
-    marginRight: 8,
-    padding: 8
+    alignItems: 'center'
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold'
   }
 });
