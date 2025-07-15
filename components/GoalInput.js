@@ -4,7 +4,8 @@ import {
   TextInput,
   Text,
   Pressable,
-  Modal
+  Modal,
+  Image
 } from 'react-native';
 import { useState } from 'react';
 
@@ -24,6 +25,10 @@ function GoalInput(props) {
     <>
       <Modal visible={props.visible} animationType='slide'>
         <View style={styles.inputContainerModal}>
+          <Image
+            source={require('../assets/favicon.png')}
+            style={{ width: 50, height: 50, marginBottom: 20 }}
+          />
           <TextInput
             style={styles.textInput}
             placeholder='Your course goal'
