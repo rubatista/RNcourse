@@ -1,10 +1,19 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Pressable } from 'react-native';
 import GoalItem from './components/GoalItem';
 import GoalInput from './components/GoalInput';
 
 export default function App() {
+  const [modalIsVisible, setModalIsVisible] = useState(false);
   const [goals, setGoals] = useState([]);
+
+  function startAddGoalModalHandler() {
+    setModalIsVisible(true);
+  }
+
+  function endAddGoalModalHandler() {
+    setModalIsVisible(false);
+  }
 
   function addGoalHandler(enteredGoal) {
     if (enteredGoal.trim().length === 0) {
@@ -14,6 +23,8 @@ export default function App() {
       ...currentGoals,
       { text: enteredGoal, id: Math.random().toString() }
     ]);
+
+    endAddGoalModalHandler();
   }
 
   function deleteGoalHandler(id) {
@@ -24,7 +35,14 @@ export default function App() {
 
   return (
     <View style={styles.appContainer}>
-      <GoalInput onAddGoal={addGoalHandler} />
+      <Pressable style={styles.button} onPress={startAddGoalModalHandler}>
+        <Text style={styles.buttonText}>Modal</Text>
+      </Pressable>
+      <GoalInput
+        onAddGoal={addGoalHandler}
+        visible={modalIsVisible}
+        onCancel={endAddGoalModalHandler}
+      />
       <View style={styles.goalsContainer}>
         <Text style={styles.title}>
           {goals.length === 0 ? 'No goals added yet!' : 'GOALS'}
@@ -65,5 +83,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 12,
     textAlign: 'center'
+  },
+  button: {
+    backgroundColor: '#410f70ff',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 5,
+    alignItems: 'center'
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold'
   }
 });
